@@ -52,7 +52,7 @@ class PredictionInput(BaseModel):
     ConnectionType: Literal["Wi-Fi", "Mobile Data"] = Field(..., description="Type of internet connection")
     
     # Model selection
-    model_name: Optional[str] = Field("RandomForest", description="Model to use for prediction")
+    model_name: Optional[str] = Field("DecisionTree", description="Model to use for prediction")
     
     class Config:
         populate_by_name = True
@@ -86,7 +86,7 @@ class PredictionInput(BaseModel):
                 "Self Control": 6,
                 "CurrentActivity": "At home",
                 "ConnectionType": "Wi-Fi",
-                "model_name": "RandomForest"
+                "model_name": "DecisionTree"
             }
         }
 
@@ -102,15 +102,7 @@ class PredictionResponse(BaseModel):
 
 @app.get("/")
 def read_root():
-    """Root endpoint providing API information."""
-    return {
-        "message": "Social Media Addiction Prediction API",
-        "version": "1.0.0",
-        "endpoints": {
-            "/predict": "POST - Make a prediction",
-            "/models": "GET - List available models"
-        }
-    }
+    return {"test": "test"}
 
 
 @app.get("/models")
@@ -118,7 +110,7 @@ def list_models():
     model_path = os.path.join(os.path.dirname(__file__), "Addiction Level_models.pkl")
     try:
         models = get_available_models(model_path)
-        return {"available_models": models,"default_model": "RandomForest"}
+        return {"available_models": models,"default_model": "DecisionTree"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading models: {str(e)}")
 
@@ -127,7 +119,7 @@ def list_models():
 def predict_addiction(input_data: PredictionInput):
     try:
         data_dict = input_data.model_dump(by_alias=True)
-        model_name = data_dict.pop("model_name", "RandomForest")
+        model_name = data_dict.pop("model_name", "DecisionTree")
         model_path = os.path.join(os.path.dirname(__file__), "Addiction Level_models.pkl")
         data_path = os.path.join(os.path.dirname(__file__), "data", "Time_Wasters_on_Social_Media.csv")
         result = predict(

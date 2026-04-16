@@ -38,7 +38,7 @@ pip install -r requirements.txt
   "Platform": "Instagram",
   "Total Time Spent": 120,
   "Self Control": 6,
-  "model_name": "RandomForest"
+  "model_name": "DecisionTree"
   // ... see full example in /docs
 }
 ```
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 {
   "addiction_level": 3,
   "probabilities": [0.05, 0.10, 0.15, 0.40, 0.20, 0.10],
-  "model_used": "RandomForest",
+  "model_used": "DecisionTree",
   "prediction_details": {
     "addiction_level_description": "Moderate addiction - Notable usage concerns",
     "confidence": 0.40
@@ -86,7 +86,7 @@ python test_api.py
 
 Choose a model using the `model_name` field:
 
-- `RandomForest` (default, recommended)
+- `DecisionTree` (default)
 - `LogisticRegression`
 - `KNN`
 - `DecisionTree`

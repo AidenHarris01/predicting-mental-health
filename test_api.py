@@ -34,7 +34,7 @@ example_data = {
     "Self Control": 6,
     "CurrentActivity": "At home",
     "ConnectionType": "Wi-Fi",
-    "model_name": "RandomForest"
+    "model_name": "DecisionTree"
 }
 
 def test_models():
