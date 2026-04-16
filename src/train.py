@@ -6,7 +6,7 @@ from sklearn.model_selection import GridSearchCV
 from preprocess import preprocess
 from models import get_models
 
-# Get command-line argument for target (Either "Addiction Level" or "ProductivityLoss" [sic])
+# cli for target
 if len(sys.argv) > 1:
     target = sys.argv[1]
 else:
@@ -22,7 +22,7 @@ X_train, X_val, X_test, y_train, y_val, y_test = preprocess(df, target, scale_fe
 # Load models
 models = get_models()
 
-# Hyperparameter grids (we may want to change some of these)
+
 param_grids = {
     "KNN": {"n_neighbors": [3,5,7]},
     "DecisionTree": {"max_depth": [5,10,None]},
@@ -37,10 +37,10 @@ best_models = {}
 
 for name, model in models.items():
     print(f"Training {name}...")
-    grid = GridSearchCV(model, param_grids.get(name, {}), cv=3, scoring="f1_macro")
+    grid = GridSearchCV(model, param_grids.get(name, {}),cv=3, scoring="f1_macro")
     grid.fit(X_train, y_train)
     best_models[name] = grid.best_estimator_
-    print(f"Best params for {name}: {grid.best_params_}")
+    print(f"best params for {name}: {grid.best_params_}")
 
 # Save models
 with open(f"{target}_models.pkl", "wb") as f:

@@ -15,28 +15,28 @@ def preprocess(df : pd.DataFrame, target, scale_features=False):
     Returns: X_train, X_val, X_test, y_train, y_val, y_test
     """
 
-    # Remove duplicate rows
+    #remove duplicate rows
     df = df.drop_duplicates()
 
-    # Separate features and target
+    
     y = df[target]
     X = df.drop(["Addiction Level", "ProductivityLoss"], axis=1)
 
-    # Handle missing values
+    # handling for missing vals
     for col in X.select_dtypes(include="number"):
         X[col] = X[col].fillna(X[col].median())
     for col in X.select_dtypes(include="object"):
         X[col] = X[col].fillna(X[col].mode()[0])
 
-    # One-hot encode categorical values
+    # one hot for categorical values
     X = pd.get_dummies(X, drop_first=True)
 
-    # Scale numerical features if required (kNN, SVM)
+    # Scale numerical features for knn and svm
     if scale_features:
         scaler = StandardScaler()
         X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
 
-    # Splits: 70% train, 15% validation, 15% test
+    #train test split
     X_temp, X_test, y_temp, y_test = train_test_split(
         X, y, test_size=0.15, random_state=42, stratify=y
     )
