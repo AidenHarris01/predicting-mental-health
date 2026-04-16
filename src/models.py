@@ -6,9 +6,6 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 
 def get_models():
-    """
-    Returns a dictionary of models to try
-    """
 
     models = {
         "LogisticRegression": LogisticRegression(max_iter=1000),

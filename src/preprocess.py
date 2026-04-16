@@ -4,16 +4,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 def preprocess(df : pd.DataFrame, target, scale_features=False):
-    """
-    Preprocess the dataset
-
-    Args:
-        df (pd.DataFrame): Dataframe representing the dataset
-        target (str): "Addiction Level" or "ProductivityLoss" [sic]
-        scale_features (bool): Whether to standardize numerical features (for kNN or SVM)
-
-    Returns: X_train, X_val, X_test, y_train, y_val, y_test
-    """
 
     #remove duplicate rows
     df = df.drop_duplicates()
