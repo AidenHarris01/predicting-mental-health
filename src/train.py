@@ -1,8 +1,10 @@
+import os
 import sys
 import pandas as pd
 import pickle
-
-from sklearn.model_selection import GridSearchCV
+import numpy as np
+sys.path.insert(0, os.path.dirname(__file__))
+from sklearn.model_selection import GridSearchCV, PredefinedSplit
 from preprocess import preprocess
 from models import get_models
 
@@ -13,15 +15,12 @@ else:
     target = "Addiction Level"
 print(f"Training models for target: {target}")
 
-# Load dataset
-df = pd.read_csv("data/Time_Wasters_on_Social_Media.csv")
 
-# Preprocess
-X_train, X_val, X_test, y_train, y_val, y_test = preprocess(df, target, scale_features=True)
+data_path = os.path.join(os.path.dirname(__file__), "..", "data", "Time_Wasters_on_Social_Media.csv")
+df = pd.read_csv(data_path)
+X_train, X_val, X_test,y_train, y_val,y_test = preprocess(df, target, scale_features=True)
 
-# Load models
 models = get_models()
-
 
 param_grids = {
     "KNN": {"n_neighbors": [3,5,7]},
@@ -33,15 +32,21 @@ param_grids = {
     "NaiveBayes": {}
 }
 
+X_trainval = pd.concat([X_train, X_val])
+y_trainval = pd.concat([y_train, y_val])
+split_indices = np.array([-1] * len(X_train) + [0] * len(X_val))
+ps = PredefinedSplit(split_indices)
+
 best_models = {}
 
 for name, model in models.items():
     print(f"Training {name}...")
-    grid = GridSearchCV(model, param_grids.get(name, {}),cv=3, scoring="f1_macro")
-    grid.fit(X_train, y_train)
+    grid = GridSearchCV(model, param_grids.get(name, {}),cv=ps, scoring="f1_macro")
+    grid.fit(X_trainval, y_trainval)
     best_models[name] = grid.best_estimator_
-    print(f"best params for {name}: {grid.best_params_}")
+    print(f"Best params for {name}: {grid.best_params_}")
 
-# Save models
-with open(f"{target}_models.pkl", "wb") as f:
+#save 
+output_path = os.path.join(os.path.dirname(__file__), "..", f"{target}_models.pkl")
+with open(output_path, "wb") as f:
     pickle.dump(best_models, f)

@@ -15,7 +15,7 @@ else:
 print(f"Training models for target: {target}")
 
 df = pd.read_csv("data/Time_Wasters_on_Social_Media.csv")
-X_train, X_val, X_test, y_train, y_val, y_test = preprocess(df, target, scale_features=True)
+X_train, X_val, X_test,y_train, y_val, y_test = preprocess(df, target, scale_features=True)
 
 
 with open(f"{target}_models.pkl", "rb") as f:
